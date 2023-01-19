@@ -40,6 +40,12 @@ def get_articles():
     return jsonify(results)
 
 
+@ app.route('/articles/<id>/', methods=["GET"])
+def post_details(id):
+    article = Articles.query.get(id)
+    return article_schema.jsonify(article)
+
+
 @ app.route('/articles', methods=["POST"])
 def add_article():
     title = request.json['title']
@@ -50,3 +56,28 @@ def add_article():
     db.session.commit()
 
     return article_schema.jsonify(articles)
+
+
+@ app.route('/articles/<id>/', methods=["PUT"])
+def update_article(id):
+    article = Articles.query.get(id)
+
+    title = request.json['title']
+    description = request.json['description']
+
+    article.title = title
+    article.description = description
+
+    db.session.commit()
+
+    return article_schema.jsonify(article)
+
+
+@ app.route('/articles/<id>/', methods=["DELETE"])
+def delete_article(id):
+    article = Articles.query.get(id)
+
+    db.session.delete(article)
+    db.session.commit()
+
+    return article_schema.jsonify(article)
